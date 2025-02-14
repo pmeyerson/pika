@@ -61,7 +61,7 @@ packages = ["pika", "pika.adapters", "pika.adapters.utils"]
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-adopts = "-ra -q --cov=pika -x -vv"
+addopts = "-ra -q --cov=pika -x -vv"
 testpaths = [
     "tests/unit",
     "tests/acceptance"
