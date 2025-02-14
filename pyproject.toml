@@ -58,3 +58,11 @@ packages = ["pika", "pika.adapters", "pika.adapters.utils"]
 
 [tool.setuptools.package-data]
 "*" = ["LICENSE", "README.rst"]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+adopts = "-ra -q --cov=pika -x -vv"
+testpaths = [
+    "tests/unit",
+    "tests/acceptance"
+]
