@@ -32,7 +32,7 @@ which on Python 3 might look like this
 
 To run all test suites, use
 
-    pynose
+    pytest
 
 Note that some tests are OS-specific (e.g. epoll on Linux
 or kqueue on MacOS and BSD). Those will be skipped
