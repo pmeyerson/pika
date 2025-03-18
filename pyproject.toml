@@ -51,6 +51,9 @@ twisted = ["twisted"]
 
 [tool.pyright]
 
+[tool.yapf]
+based_on_style = "google"
+
 [tool.setuptools]
 zip-safe = true
 include-package-data = false
@@ -58,3 +61,14 @@ packages = ["pika", "pika.adapters", "pika.adapters.utils"]
 
 [tool.setuptools.package-data]
 "*" = ["LICENSE", "README.rst"]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra --cov=pika -x"
+python_files = ["*_tests.py"]
+testpaths = [
+    "tests/unit",
+    "tests/acceptance",
+]
+log_cli = "true"
+log_level = "DEBUG"
