@@ -23,8 +23,9 @@ class TestGetNativeIOLoop(unittest.TestCase,
 """
 
 import unittest
+import pytest
+TEST_TIMEOUT= 15*1.1
 
-from tests.wrappers.threaded_test_wrapper import run_in_thread_with_timeout
 
 # Suppress missing-docstring to allow test method names to be printed by our the
 # test runner
@@ -83,7 +84,7 @@ class IOServicesTestStubs(object):
     # test runner
     # pylint: disable=C0111
 
-    @run_in_thread_with_timeout
+    @pytest.mark.timeout(timeout=TEST_TIMEOUT, method="thread")
     def test_with_select_connection_io_services(self):
         # Test entry point for `select_connection.IOLoop`-based async services
         # implementation.
@@ -96,7 +97,7 @@ class IOServicesTestStubs(object):
             nbio_factory=lambda: SelectorIOServicesAdapter(native_loop),
             native_loop=native_loop)
 
-    @run_in_thread_with_timeout
+    @pytest.mark.timeout(timeout=TEST_TIMEOUT, method="thread")
     def test_with_tornado_io_services(self):
         # Test entry point for `tornado.ioloop.IOLoop`-based async services
         # implementation.
@@ -110,7 +111,7 @@ class IOServicesTestStubs(object):
             nbio_factory=lambda: SelectorIOServicesAdapter(native_loop),
             native_loop=native_loop)
 
-    @run_in_thread_with_timeout
+    @pytest.mark.timeout(timeout=TEST_TIMEOUT, method="thread")
     def test_with_asyncio_io_services(self):
         # Test entry point for `asyncio` event loop-based io services
         # implementation.

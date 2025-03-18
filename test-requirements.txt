@@ -5,6 +5,7 @@ pytest
 pytest-cov
 pytest-mock
 pytest-twisted
+pytest-timeout
 tornado
 twisted
 enum34; python_version == '2.7' or (python_version >= '3.0' and python_version <= '3.4')

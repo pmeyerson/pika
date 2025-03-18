@@ -6,6 +6,7 @@ import functools
 import os
 import select
 import logging
+import pytest
 import unittest
 from unittest import mock
 import uuid
@@ -32,11 +33,6 @@ from tests.wrappers.threaded_test_wrapper import create_run_in_thread_decorator
 
 TEST_TIMEOUT = 15
 
-# Decorator for running our tests in threads with timeout
-# NOTE: we give it a little more time to give our I/O loop-based timeout logic
-# sufficient time to mop up.
-run_test_in_thread_with_timeout = create_run_in_thread_decorator(  # pylint: disable=C0103
-    TEST_TIMEOUT * 1.1)
 
 
 def make_stop_on_error_with_self(the_self=None):
@@ -311,13 +307,13 @@ class AsyncAdapters(object):
         """
         raise NotImplementedError
 
-    @run_test_in_thread_with_timeout
+    @pytest.mark.timeout(TEST_TIMEOUT,  method="thread")
     def test_with_select_default(self):
         """SelectConnection:DefaultPoller"""
         with mock.patch.multiple(select_connection, SELECT_TYPE=None):
             self.start(adapters.SelectConnection, select_connection.IOLoop)
 
-    @run_test_in_thread_with_timeout
+    @pytest.mark.timeout(TEST_TIMEOUT, method="thread")
     def test_with_select_select(self):
         """SelectConnection:select"""
 
@@ -326,7 +322,7 @@ class AsyncAdapters(object):
 
     @unittest.skipIf(not hasattr(select, 'poll') or
                      not hasattr(select.poll(), 'modify'), "poll not supported")  # pylint: disable=E1101
-    @run_test_in_thread_with_timeout
+    @pytest.mark.timeout(TEST_TIMEOUT, method="thread")
     def test_with_select_poll(self):
         """SelectConnection:poll"""
 
@@ -334,7 +330,7 @@ class AsyncAdapters(object):
             self.start(adapters.SelectConnection, select_connection.IOLoop)
 
     @unittest.skipIf(not hasattr(select, 'epoll'), "epoll not supported")
-    @run_test_in_thread_with_timeout
+    @pytest.mark.timeout(TEST_TIMEOUT, method="thread")
     def test_with_select_epoll(self):
         """SelectConnection:epoll"""
 
@@ -342,7 +338,7 @@ class AsyncAdapters(object):
             self.start(adapters.SelectConnection, select_connection.IOLoop)
 
     @unittest.skipIf(not hasattr(select, 'kqueue'), "kqueue not supported")
-    @run_test_in_thread_with_timeout
+    @pytest.mark.timeout(TEST_TIMEOUT, method="thread")
     def test_with_select_kqueue(self):
         """SelectConnection:kqueue"""
 
@@ -350,7 +346,7 @@ class AsyncAdapters(object):
             self.start(adapters.SelectConnection, select_connection.IOLoop)
 
     @unittest.skipIf(pika.compat.ON_WINDOWS, "Windows not supported")
-    @run_test_in_thread_with_timeout
+    @pytest.mark.timeout(TEST_TIMEOUT, method="thread")
     def test_with_gevent(self):
         """GeventConnection"""
         import gevent
@@ -362,7 +358,7 @@ class AsyncAdapters(object):
 
         self.start(GeventConnection, ioloop_factory)
 
-    @run_test_in_thread_with_timeout
+    @pytest.mark.timeout(TEST_TIMEOUT, method="thread")
     def test_with_tornado(self):
         """TornadoConnection"""
         import tornado.ioloop
@@ -370,7 +366,7 @@ class AsyncAdapters(object):
         ioloop_factory = tornado.ioloop.IOLoop
         self.start(TornadoConnection, ioloop_factory)
 
-    @run_test_in_thread_with_timeout
+    @pytest.mark.timeout(TEST_TIMEOUT, method="thread")
     def test_with_asyncio(self):
         """AsyncioConnection"""
         import asyncio

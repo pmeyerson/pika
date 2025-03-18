@@ -8,11 +8,13 @@ from io import StringIO
 import sys
 import threading
 import time
+import pytest
 import unittest
 from unittest import mock
 
 from tests.wrappers import threaded_test_wrapper
-from tests.wrappers.threaded_test_wrapper import (_ThreadedTestWrapper, run_in_thread_with_timeout)
+from tests.wrappers.threaded_test_wrapper import (_ThreadedTestWrapper)
+TEST_TIMEOUT=15
 
 # Suppress invalid-name, since our test names are descriptive and quite long
 # pylint: disable=C0103
@@ -40,7 +42,7 @@ class ThreadedTestWrapperSelfChecks(unittest.TestCase):
 
         caller_thread_id = threading.current_thread().ident
 
-        @run_in_thread_with_timeout
+        @pytest.mark.timeout(timeout=TEST_TIMEOUT*1.1)
         def my_errant_function(*_args, **_kwargs):
             if threading.current_thread().ident != caller_thread_id:
                 raise SelfCheckExceptionHandling()
@@ -77,7 +79,7 @@ class ThreadedTestWrapperSelfChecks(unittest.TestCase):
         # Suppress error output by redirecting to our stringio_stderr object
         stringio_stderr = StringIO()
 
-        @run_in_thread_with_timeout
+        @pytest.mark.timeout(timeout=TEST_TIMEOUT*1.1)
         def my_sleeper(*_args, **_kwargs):
             time.sleep(1.1)
 
@@ -101,7 +103,7 @@ class ThreadedTestWrapperSelfChecks(unittest.TestCase):
         kwargs_bucket = []
         value_to_return = dict()
 
-        @run_in_thread_with_timeout
+        @pytest.mark.timeout(timeout=TEST_TIMEOUT*1.1)
         def my_guinea_pig(*args, **kwargs):
             args_bucket.append(args)
             kwargs_bucket.append(kwargs)
@@ -129,7 +131,7 @@ class ThreadedTestWrapperSelfChecks(unittest.TestCase):
 
     def test_skip_test_is_passed_through(self):
 
-        @run_in_thread_with_timeout
+        @pytest.mark.timeout(timeout=TEST_TIMEOUT*1.1)
         def my_test_skipper():
             raise unittest.SkipTest('I SKIP')
 
