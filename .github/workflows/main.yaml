@@ -47,6 +47,9 @@ jobs:
     strategy:
       matrix:
         python-version: [ 3.8, 3.9, '3.10', '3.11', '3.12' ]
+        test-tls: [true, false]
+    env:
+      PIKA_TEST_TLS: ${{ matrix.test-tls }}        
     services:
       rabbitmq:
         image: rabbitmq
